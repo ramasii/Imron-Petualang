@@ -5,7 +5,6 @@ public class TimeSwapper : MonoBehaviour
 {
     public List<TileSlider> tileSliders = new List<TileSlider>();
     
-    
     public float swapAnimationSpeed = 5f;
     [SerializeField] List<Vector3> sliderPositions = new List<Vector3>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
