@@ -5,40 +5,64 @@ public class Tile : MonoBehaviour
 {
     public Vector3 stayPosition;
     public float slideSpeed = 50f;
+    public float uSpeed = 50f;
+    public float scalSize = 3f;
+    public float curveHeight = 2f;
 
     private bool isAnimating = false;
+    private Vector3 lastStayPos;
 
     void Update()
     {
         if (!isAnimating && transform.position != stayPosition)
         {
-            AnimateSlide(stayPosition);
+            // dicek kalo posisi X nya > skala
+            if (Mathf.Abs(lastStayPos.x - stayPosition.x) > scalSize)
+            {
+                MoveU();
+            }
+            // kalo po posisi X nya ga jauh pindahnya
+            else
+            {
+                // dicek lagi apakah posisi Z berubah
+                // kalo iy berarti lagi swap time
+                if (lastStayPos.z > stayPosition.z)
+                {
+                    MoveU();
+                }
+                // ini kalo slide tile tapi ga jauh banget
+                else
+                {
+                    AnimateSlide();
+                }
+            }
         }
     }
 
     public void setStayPosition(Vector3 newPos)
     {
+        lastStayPos = stayPosition; // disimpen posisi terakhir
         stayPosition = newPos;
     }
 
-    void AnimateSlide(Vector3 targetPosition)
+    void AnimateSlide()
     {
         transform.position = Vector3.MoveTowards(
             transform.position,
-            targetPosition,
+            stayPosition,
             Time.deltaTime * slideSpeed
         );
     }
 
     // =========================
-    //  U TRANSITION FIXED
+    //  U TRANSITION
     // =========================
-    public void MoveU(Vector3 target, float curveHeight, float speed)
+    public void MoveU()
     {
-        StartCoroutine(MoveUCorr(target, curveHeight, speed));
+        StartCoroutine(MoveUCorr());
     }
 
-    IEnumerator MoveUCorr(Vector3 target, float curveHeight, float speed)
+    IEnumerator MoveUCorr()
     {
         isAnimating = true;
 
@@ -47,18 +71,18 @@ public class Tile : MonoBehaviour
 
         while (t < 1f)
         {
-            t += Time.deltaTime * speed;
-            Vector3 pos = Vector3.Lerp(start, target, t);
+            t += Time.deltaTime * uSpeed;
+            Vector3 pos = Vector3.Lerp(start, stayPosition, t);
             pos.y += -Mathf.Sin(t * Mathf.PI) * curveHeight;
             transform.position = pos;
 
             yield return null;
         }
 
-        transform.position = target;
+        transform.position = stayPosition;
 
         //  penting: sync posisi + stop blocking
-        stayPosition = target;
+        //stayPosition = stayPosition;
         isAnimating = false;
     }
 }

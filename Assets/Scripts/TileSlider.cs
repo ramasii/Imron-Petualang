@@ -6,7 +6,7 @@ public class TileSlider : MonoBehaviour
 {
     public List<Tile> tiles = new List<Tile>();
 
-    public float curveHeight = 2f;
+    
     public float speed = 3f;
     private bool isSliding;
 
@@ -34,14 +34,7 @@ public class TileSlider : MonoBehaviour
         {
             Vector3 target = tempPositions[i];
 
-            if (tiles[i] == lastTile)
-            {
-                tiles[i].MoveU(target, curveHeight, speed);
-            }
-            else
-            {
-                tiles[i].setStayPosition(target);
-            }
+            tiles[i].setStayPosition(target);
         }
 
         StartCoroutine(UnlockAfterDelay());
@@ -63,14 +56,7 @@ public class TileSlider : MonoBehaviour
         {
             Vector3 target = tempPositions[i];
 
-            if (tiles[i] == firstTile)
-            {
-                tiles[i].MoveU(target, curveHeight, speed);
-            }
-            else
-            {
-                tiles[i].setStayPosition(target);
-            }
+            tiles[i].setStayPosition(target);
         }
         StartCoroutine(UnlockAfterDelay());
     }
