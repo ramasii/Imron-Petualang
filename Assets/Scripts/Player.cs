@@ -5,7 +5,10 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
     public bool canMove = false;
+    public bool canUseitem = true;
     public float moveSpeed = 5f;
+    public Item equippedItem;
+    public Transform itemHoldPoint;
     [SerializeField] private Vector3 spawnPoint;
     [SerializeField] private Vector3 spawnRotation;
     Camera mainCam;
@@ -30,6 +33,11 @@ public class Player : MonoBehaviour
     {
         Move();
         LookAtCursor();
+
+        if(Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            DropItem();
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -52,6 +60,46 @@ public class Player : MonoBehaviour
         // gerak berdasarkan arah kamera
         Vector3 move = camForward * moveInput.y + camRight * moveInput.x;
         transform.position += moveSpeed * Time.deltaTime * move;
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            UseItem();
+        }
+    }
+
+    void UseItem()
+    {
+        if (equippedItem != null && canUseitem)
+        {
+            equippedItem.Use();
+        }
+    }
+
+    void DropItem(bool itemKinematic = false, bool showBtn = true)
+    {
+        if (equippedItem != null)
+        {
+            equippedItem.Drop(itemKinematic, showBtn);
+            equippedItem = null;
+        }
+    }
+
+    public void PickUpItem(Item item)
+    {
+        if (equippedItem != null)
+        {
+            DropItem();
+        }
+
+        item.PickUp();
+
+        equippedItem = item;
+        item.transform.SetParent(itemHoldPoint);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localRotation = Quaternion.identity;
     }
 
     void LookAtCursor()
@@ -82,6 +130,7 @@ public class Player : MonoBehaviour
         {
             ResetPlayer();
             canMove = false;
+            DropItem(true, false);
         }
         else if (newState == FlowState.PlayRoute)
         {
@@ -100,7 +149,7 @@ public class Player : MonoBehaviour
     {
         StartCoroutine(MoveU());
     }
-    
+
     IEnumerator MoveU()
     {
         // isAnimating = true;
@@ -123,5 +172,36 @@ public class Player : MonoBehaviour
         //  penting: sync posisi + stop blocking
         //stayPosition = stayPosition;
         // isAnimating = false;
+    }
+
+    public void CanUseItem(bool canUse)
+    {
+        canUseitem = canUse;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Item"))
+        {
+            Debug.Log("Player entered item trigger");
+            Item item = other.GetComponent<Item>();
+            if (item != null && equippedItem != item)
+            {
+                item.ShowPickupBtn(true);
+            }
+        }
+    }
+    
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Item"))
+        {
+            Item item = other.GetComponent<Item>();
+            if (item != null)
+            {
+                item.ShowPickupBtn(false);
+            }
+
+        }
     }
 }
