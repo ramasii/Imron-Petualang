@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        spawnPos = transform.position;
+        spawnPos = transform.localPosition;
     }
 
     void Update()
@@ -126,12 +126,12 @@ public class Enemy : MonoBehaviour
             pos.y += Mathf.Sin(t * Mathf.PI) *
                      Mathf.Clamp(Vector3.Distance(start, spawnPos), 0, 10f);
 
-            transform.position = pos;
+            transform.localPosition = pos;
 
             yield return null;
         }
 
-        transform.position = spawnPos;
+        transform.localPosition = spawnPos;
     }
 
     public void PlayStop()
