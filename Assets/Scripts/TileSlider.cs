@@ -5,9 +5,13 @@ using UnityEngine;
 public class TileSlider : MonoBehaviour
 {
     public List<Tile> tiles = new List<Tile>();
-
-    
     public float speed = 3f;
+    public delegate void OnTimelineChanged(int newTimeline);
+    public event OnTimelineChanged onTimelineChanged;
+
+    [Header("Private")]
+    [SerializeField] private int timeline = 0;
+
     private bool isSliding;
 
     void Start()
@@ -77,5 +81,17 @@ public class TileSlider : MonoBehaviour
     {
         yield return new WaitForSeconds(0.6f);
         isSliding = false;
+    }
+
+    public void SetTimeline(int t)
+    {
+        Debug.Log($"TileSlider {gameObject.name} timeline set to {t}");
+        timeline = t;
+        onTimelineChanged?.Invoke(timeline);
+    }
+
+    public int GetTimeline()
+    {
+        return timeline;
     }
 }

@@ -10,9 +10,11 @@ public class TimeSwapper : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        foreach (TileSlider slider in tileSliders)
+        // set timeline awal
+        for (int i = 0; i < tileSliders.Count; i++)
         {
-            sliderPositions.Add(slider.transform.position);
+            tileSliders[i].SetTimeline(i);
+            sliderPositions.Add(tileSliders[i].transform.position);
         }
     }
 
@@ -40,7 +42,7 @@ public class TimeSwapper : MonoBehaviour
 
         // (sliderPositions[idxA], sliderPositions[idxB]) = (sliderPositions[idxB], sliderPositions[idxA]);
         (tileSliders[idxB], tileSliders[idxA]) = (tileSliders[idxA], tileSliders[idxB]);
-        
+
         // geser posisi tile sesuai urutan baru
         for (int i = 0; i < tileSliders[idxA].tiles.Count; i++)
         {
@@ -50,6 +52,11 @@ public class TimeSwapper : MonoBehaviour
         {
             tileSliders[idxB].tiles[i].setStayPosition(tempTilePosB[i]);
         }
+
+        // tukar juga timeline nya
+        int tempTimeline = tileSliders[idxA].GetTimeline();
+        tileSliders[idxA].SetTimeline(tileSliders[idxB].GetTimeline());
+        tileSliders[idxB].SetTimeline(tempTimeline);
     }
 
     void AnimateSlide(TileSlider t, Vector3 targetPosition)
