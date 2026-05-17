@@ -1736,18 +1736,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1528771441}
-        m_TargetAssemblyTypeName: EnemyMovement, Assembly-CSharp
-        m_MethodName: PlayStop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &394736231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5620,18 +5608,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1528771441}
-        m_TargetAssemblyTypeName: EnemyMovement, Assembly-CSharp
-        m_MethodName: PlayStop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!114 &1981104111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5897,6 +5873,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   canMove: 0
   canUseitem: 1
+  equipWeapon: 0
+  isAttacking: 0
   moveSpeed: 5
   equippedItem: {fileID: 0}
   itemHoldPoint: {fileID: 2145616372}
@@ -6373,6 +6351,10 @@ PrefabInstance:
       objectReference: {fileID: 134556618}
     - target: {fileID: 2843132916061573037, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}
       propertyPath: m_Name
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2843132916061573037, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}
+      propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8573515660150208100, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}

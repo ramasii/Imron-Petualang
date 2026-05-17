@@ -22,9 +22,16 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public Transform playerTarget;
 
+    Gameflow gameflow;
+
     private void Start()
     {
         spawnPos = transform.localPosition;
+        gameflow = FindAnyObjectByType<Gameflow>();
+        if (gameflow != null)
+        {
+            gameflow.onStateChange += OnGameflowStateChange;
+        }
     }
 
     void Update()
@@ -85,6 +92,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void OnGameflowStateChange(FlowState newState)
+    {
+        if (newState == FlowState.ArrangeRoute)
+        {
+            PlayStop();
+        }
+        else if (newState == FlowState.PlayRoute)
+        {
+            PlayStop();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -133,7 +152,7 @@ public class Enemy : MonoBehaviour
         transform.localPosition = spawnPos;
     }
 
-    public void PlayStop()
+    void PlayStop()
     {
         if (canMove)
         {
