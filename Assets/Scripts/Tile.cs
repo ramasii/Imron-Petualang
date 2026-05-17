@@ -15,6 +15,14 @@ public class Tile : MonoBehaviour
     private Vector3 lastStayPos;
     [SerializeField]private TileSlider parentSlider;
 
+    public TileType tileType;
+
+    public enum TileType
+    {
+        Grass,
+        Stone
+    }
+
     void Start()
     {
         // TileSlider parentSlider = GetComponentInParent<TileSlider>();
