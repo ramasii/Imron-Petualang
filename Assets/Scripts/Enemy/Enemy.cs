@@ -7,14 +7,17 @@ public class Enemy : MonoBehaviour
     public float speed = 3f;
     public float chaseSpeed = 5f;
     public float rotateSpeed = 5f;
-    public float waitTime = 1f;
+    public float waitTime = 1f; //.
     public bool loop = true;
+    [Header("Animator")]
+    public Animator animator;
 
     private Vector3 spawnPos;
 
     private int currentPoint = 0;
     private bool isWaiting = false;
     private bool canMove = false;
+    private Vector3 moveDir;
 
     [HideInInspector]
     public bool isChasing = false;
@@ -44,12 +47,12 @@ public class Enemy : MonoBehaviour
         if (isChasing && playerTarget != null)
         {
             RotateTo(playerTarget.position);
-
-            transform.position = Vector3.MoveTowards(
+            moveDir = Vector3.MoveTowards(
                 transform.position,
                 playerTarget.position,
                 chaseSpeed * Time.deltaTime
             );
+            transform.position = moveDir;
 
             return;
         }
@@ -63,15 +66,30 @@ public class Enemy : MonoBehaviour
 
         RotateTo(target.position);
 
-        transform.position = Vector3.MoveTowards(
+        moveDir = Vector3.MoveTowards(
             transform.position,
             target.position,
             speed * Time.deltaTime
         );
+        transform.position = moveDir;
 
         if (Vector3.Distance(transform.position, target.position) < 0.05f)
         {
+            moveDir = Vector3.zero;
             StartCoroutine(WaitAtPoint());
+        }
+
+        // =======================
+        // ANIMATOR
+        // =======================
+        MoveAnim();
+    }
+
+    void MoveAnim()
+    {
+        if (animator != null)
+        {
+            animator.SetFloat("Magnitude", moveDir.magnitude);
         }
     }
 
@@ -94,21 +112,19 @@ public class Enemy : MonoBehaviour
 
     void OnGameflowStateChange(FlowState newState)
     {
-        if (newState == FlowState.ArrangeRoute)
-        {
-            PlayStop();
-        }
-        else if (newState == FlowState.PlayRoute)
-        {
-            PlayStop();
-        }
+        PlayStop(newState);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // jika menyentuh player maka serang player (kembali ke arrange route)
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Serang");
+            // Debug.Log($"{gameObject.name} menyerang Player");
+
+            // kembali ke arrange route setelah menyerang player
+            Gameflow gameflow = FindAnyObjectByType<Gameflow>();
+            if (gameflow != null) gameflow.ArrangeRoute();
         }
     }
 
@@ -129,6 +145,11 @@ public class Enemy : MonoBehaviour
         }
 
         isWaiting = false;
+    }
+
+    public void DeactivateEnemy()
+    {
+        gameObject.SetActive(false);
     }
 
     IEnumerator MoveU()
@@ -152,13 +173,17 @@ public class Enemy : MonoBehaviour
         transform.localPosition = spawnPos;
     }
 
-    void PlayStop()
+    void PlayStop(FlowState newState)
     {
-        if (canMove)
+        // kalo arrange route, musuh stop dan balik ke posisi spawn
+        if (newState == FlowState.ArrangeRoute)
         {
+            gameObject.SetActive(true); // pastikan musuh aktif saat arrange route
+
             canMove = false;
             StartCoroutine(MoveU());
         }
+        // kalo play route, musuh bisa jalan lagi
         else
         {
             canMove = true;

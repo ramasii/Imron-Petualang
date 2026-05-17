@@ -1676,30 +1676,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1981104108}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 394736228}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1223554983}
         m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
         m_MethodName: set_alpha
@@ -4349,7 +4325,7 @@ GameObject:
   - component: {fileID: 1383042086}
   - component: {fileID: 1383042085}
   - component: {fileID: 1383042088}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -5452,6 +5428,9 @@ MonoBehaviour:
   cineCams:
   - {fileID: 214268716}
   - {fileID: 1074953166}
+  flowButtons:
+  - {fileID: 1981104110}
+  - {fileID: 394736230}
 --- !u!1 &1981104108
 GameObject:
   m_ObjectHideFlags: 0
@@ -5540,30 +5519,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Gameflow, Assembly-CSharp
         m_MethodName: ArrangeRoute
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 394736228}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1981104108}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5704,6 +5659,7 @@ GameObject:
   - component: {fileID: 2022464474}
   - component: {fileID: 2022464476}
   - component: {fileID: 2022464477}
+  - component: {fileID: 2022464478}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -5878,6 +5834,8 @@ MonoBehaviour:
   moveSpeed: 5
   equippedItem: {fileID: 0}
   itemHoldPoint: {fileID: 2145616372}
+  isGrounded: 1
+  animator: {fileID: 2022464478}
   spawnPoint: {x: 0, y: 0, z: 0}
   spawnRotation: {x: 0, y: 0, z: 0}
 --- !u!54 &2022464476
@@ -5928,6 +5886,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &2022464478
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022464472}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1619be44dd8a666429c08e536157204a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2113198267
 GameObject:
   m_ObjectHideFlags: 0
@@ -6243,6 +6223,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 6456745306090516585, guid: c5facaf6ecb1a7c49afb758643b19727, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7622550263991989267, guid: c5facaf6ecb1a7c49afb758643b19727, type: 3}
       propertyPath: m_Name
       value: Weapon Prototype
@@ -6353,9 +6337,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    - target: {fileID: 2843132916061573037, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}
-      propertyPath: m_TagString
-      value: Enemy
+    - target: {fileID: 5998287603002760512, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 8573515660150208100, guid: ea453110eee6ea940a639a07ee8d4749, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6414,8 +6398,8 @@ SceneRoots:
   - {fileID: 1497992234}
   - {fileID: 446351335}
   - {fileID: 1223554982}
-  - {fileID: 1855408341}
   - {fileID: 1902279499}
+  - {fileID: 1855408341}
   - {fileID: 214268717}
   - {fileID: 1936063526}
   - {fileID: 1074953167}

@@ -10,6 +10,10 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5f;
     public Item equippedItem;
     public Transform itemHoldPoint;
+    public bool isGrounded = true;
+    [Header("Animator")]
+    public Animator animator;
+    [Header("Private")]
     [SerializeField] private Vector3 spawnPoint;
     [SerializeField] private Vector3 spawnRotation;
     Camera mainCam;
@@ -53,6 +57,8 @@ public class Player : MonoBehaviour
         // mencegah pergerakan jika canMove false
         if (!canMove) return;
 
+        MoveAnim();
+
         // mencegah pergerakan jika input terlalu kecil
         if (moveInput.sqrMagnitude < 0.01f) return;
 
@@ -65,24 +71,82 @@ public class Player : MonoBehaviour
         transform.position += moveSpeed * Time.deltaTime * move;
     }
 
+    void MoveAnim()
+    {
+        // set animator parameter
+        if (animator != null)
+        {
+            animator.SetFloat("Magnitude", moveInput.magnitude);
+        }
+    }
+
+    public void Jump()
+    {
+        if (isGrounded)
+        {
+            // Implement jump logic here (e.g., add upward force)
+            // Rigidbody rb = GetComponent<Rigidbody>();
+            // if (rb != null)
+            // {
+            //     rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // }
+        }
+    }
+
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
             UseItem();
-            if(equipWeapon)
-            {
-                isAttacking = true;
-                StartCoroutine(ResetAttack());
-            }
         }
     }
 
+    // panggil method Use() dari item yang sedang dipegang
     void UseItem()
     {
         if (equippedItem != null && canUseitem)
         {
             equippedItem.Use();
+
+            if (animator != null)
+            {
+                // jika item yang digunakan adalah consumable
+                if (equippedItem is Consumable)
+                {
+                    animator.SetTrigger("Use Item");
+                    DropItem();
+                }
+                // jika item yang digunakan adalah weapon
+                else
+                {
+                    animator.SetTrigger("Attack");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Method ini dipanggil dari Animation Event di animasi serangan. Pastikan nama method ini sesuai dengan yang ada di Animation Event.
+    /// </summary>
+    public void OnStartAttackAnim()
+    {
+        Debug.Log("Attack animation started");
+        if (equippedItem is Weapon weapon)
+        {
+            weapon.EnableHitTrigger(true);
+            isAttacking = true;
+        }
+    }
+
+    /// <summary>
+    /// Method ini dipanggil dari Animation Event di animasi serangan. Pastikan nama method ini sesuai dengan yang ada di Animation Event.
+    /// </summary>
+    public void OnEndAttackAnim()
+    {
+        if (equippedItem is Weapon weapon)
+        {
+            weapon.EnableHitTrigger(false);
+            isAttacking = false;
         }
     }
 
@@ -176,16 +240,6 @@ public class Player : MonoBehaviour
         }
 
         transform.position = spawnPoint;
-
-        //  penting: sync posisi + stop blocking
-        //stayPosition = stayPosition;
-        // isAnimating = false;
-    }
-
-    IEnumerator ResetAttack()
-    {
-        yield return new WaitForSeconds(0.2f); // Durasi serangan, sesuaikan dengan animasi jika ada
-        isAttacking = false;
     }
 
     public void CanUseItem(bool canUse)
@@ -202,24 +256,6 @@ public class Player : MonoBehaviour
             if (item != null && equippedItem != item)
             {
                 item.ShowPickupBtn(true);
-            }
-        }
-        if (other.CompareTag("Enemy") && !equipWeapon)
-        {
-            Debug.Log("Player Dead");
-            gameflow.ArrangeRoute();
-        }
-        else if (other.CompareTag("Enemy") && equipWeapon)
-        {
-            if(isAttacking)
-            {
-                Debug.Log("Enemy Defeated");
-                other.gameObject.SetActive(false);
-            }
-            else
-            {
-                Debug.Log("Player Dead");
-                gameflow.ArrangeRoute();
             }
         }
     }
