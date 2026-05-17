@@ -92,6 +92,11 @@ public class Item : MonoBehaviour
         {
             rb.isKinematic = true; // Nonaktifkan fisika saat dipegang
         }
+        if(itemName == "Dagger")
+        {
+            Player player = FindAnyObjectByType<Player>();
+            player.equipWeapon = true;
+        }
 
         ShowPickupBtn(false); // Sembunyikan tombol saat dipegang
     }
