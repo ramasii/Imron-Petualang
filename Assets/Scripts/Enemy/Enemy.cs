@@ -114,7 +114,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator MoveU()
     {
-        Vector3 start = transform.position;
+        Vector3 start = transform.localPosition;
         float t = 0;
 
         while (t < 1f)
@@ -123,8 +123,7 @@ public class Enemy : MonoBehaviour
 
             Vector3 pos = Vector3.Lerp(start, spawnPos, t);
 
-            pos.y += Mathf.Sin(t * Mathf.PI) *
-                     Mathf.Clamp(Vector3.Distance(start, spawnPos), 0, 10f);
+            pos.y += Mathf.Sin(t * Mathf.PI) * Mathf.Clamp(Vector3.Distance(start, spawnPos) * 0.5f, 0, 5f);
 
             transform.localPosition = pos;
 
