@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Imron-Petualang.slnx",
+    "dotnet.defaultSolution": "Imron Petualang.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }

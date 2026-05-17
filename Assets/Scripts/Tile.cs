@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
@@ -8,9 +9,20 @@ public class Tile : MonoBehaviour
     public float uSpeed = 50f;
     public float scalSize = 3f;
     public float curveHeight = 2f;
+    [Header("Private")]
 
     private bool isAnimating = false;
     private Vector3 lastStayPos;
+    [SerializeField]private TileSlider parentSlider;
+
+    void Start()
+    {
+        // TileSlider parentSlider = GetComponentInParent<TileSlider>();
+        if (parentSlider)
+        {
+            parentSlider.onTimelineChanged += OnTimelineChanged;
+        }
+    }
 
     void Update()
     {
@@ -84,5 +96,27 @@ public class Tile : MonoBehaviour
         //  penting: sync posisi + stop blocking
         //stayPosition = stayPosition;
         isAnimating = false;
+    }
+
+    public void OnTimelineChanged(int newTimeline)
+    {
+        Debug.Log($"Tile {gameObject.name} received timeline change to {newTimeline}");
+        List<TimableObject> timableObjects = new List<TimableObject>(GetComponentsInChildren<TimableObject>());
+        foreach (TimableObject obj in timableObjects)
+        {
+            Debug.Log($"Tile {gameObject.name} set phase {newTimeline} for {obj.gameObject.name}");
+            obj.SetPhase(newTimeline);
+        }
+    }
+
+    public int GetTimeline()
+    {
+        TileSlider parentSlider = GetComponentInParent<TileSlider>();
+        if (parentSlider)
+        {
+            return parentSlider.GetTimeline();
+        }
+
+        return 0;
     }
 }
