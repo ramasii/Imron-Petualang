@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     Camera mainCam;
     Vector2 moveInput;
 
+    float footstepTimer;
+    public float footstepDelay = 0.5f;
+
     Gameflow gameflow;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -37,15 +40,17 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+{
         Move();
         LookAtCursor();
 
-        if(Keyboard.current.qKey.wasPressedThisFrame)
+        if (Keyboard.current.qKey.wasPressedThisFrame)
         {
             DropItem();
         }
-    }
+
+        HandleFootstep();
+}
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -270,6 +275,43 @@ public class Player : MonoBehaviour
                 item.ShowPickupBtn(false);
             }
 
+        }
+    }
+
+    void PlayFootstepSFX()
+    {
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, Vector3.down, out hit, 5f))
+        {
+            Tile tile = hit.collider.GetComponent<Tile>();
+
+            if (tile == null)
+            {
+                tile = hit.collider.GetComponentInParent<Tile>();
+            }
+            if (tile != null)
+            {
+                AudioManager.Instance.PlayFootstep(tile.tileType);
+                Debug.Log(hit.collider.name);
+            }
+        }
+    }
+
+    void HandleFootstep()
+    {
+        if (!canMove) return;
+
+        bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+        if (!isMoving) return;
+
+        footstepTimer -= Time.deltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            PlayFootstepSFX();
+            footstepTimer = footstepDelay;
         }
     }
 }
