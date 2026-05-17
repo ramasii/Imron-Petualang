@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public bool canMove = false;
     public bool canUseitem = true;
+    public bool equipWeapon, isAttacking;
     public float moveSpeed = 5f;
     public Item equippedItem;
     public Transform itemHoldPoint;
@@ -13,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector3 spawnRotation;
     Camera mainCam;
     Vector2 moveInput;
+
+    Gameflow gameflow;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,7 +24,7 @@ public class Player : MonoBehaviour
         mainCam = Camera.main;
 
         // Subscribe to Gameflow state change event
-        Gameflow gameflow = FindAnyObjectByType<Gameflow>();
+        gameflow = FindAnyObjectByType<Gameflow>();
         if (gameflow != null)
         {
             gameflow.onStateChange += OnGameflowStateChange;
@@ -67,6 +70,11 @@ public class Player : MonoBehaviour
         if (context.started)
         {
             UseItem();
+            if(equipWeapon)
+            {
+                isAttacking = true;
+                StartCoroutine(ResetAttack());
+            }
         }
     }
 
@@ -174,6 +182,12 @@ public class Player : MonoBehaviour
         // isAnimating = false;
     }
 
+    IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(0.2f); // Durasi serangan, sesuaikan dengan animasi jika ada
+        isAttacking = false;
+    }
+
     public void CanUseItem(bool canUse)
     {
         canUseitem = canUse;
@@ -188,6 +202,24 @@ public class Player : MonoBehaviour
             if (item != null && equippedItem != item)
             {
                 item.ShowPickupBtn(true);
+            }
+        }
+        if (other.CompareTag("Enemy") && !equipWeapon)
+        {
+            Debug.Log("Player Dead");
+            gameflow.ArrangeRoute();
+        }
+        else if (other.CompareTag("Enemy") && equipWeapon)
+        {
+            if(isAttacking)
+            {
+                Debug.Log("Enemy Defeated");
+                other.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Player Dead");
+                gameflow.ArrangeRoute();
             }
         }
     }
