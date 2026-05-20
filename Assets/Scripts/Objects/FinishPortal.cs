@@ -5,12 +5,22 @@ using System.Collections;
 public class FinishPortal : MonoBehaviour
 {
     public string nextSceneName;
+    public Transition transition;
     private bool isLoading = false;
+    private Gameflow gameflow;
+    void Awake()
+    {
+        gameflow = FindAnyObjectByType<Gameflow>();
+        if (gameflow)
+        {
+            gameflow.onLevelFinish += GoToNextLevel;
+        }
+    }
     public void GoToNextLevel()
     {
         Debug.Log("Go to next level: " + nextSceneName);
 
-        // StartCoroutine(LoadAsync(nextSceneName));
+        transition.StartTransition();
         StartCoroutine(LoadAndHold(nextSceneName));
     }
 
@@ -32,6 +42,9 @@ public class FinishPortal : MonoBehaviour
     IEnumerator LoadAndHold(string sceneName)
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+
+        Instantiate(transition, Vector3.zero, Quaternion.identity); // Buat instance transisi
+
         op.allowSceneActivation = false; // Tahan scene agar tidak langsung pindah
 
         while (op.progress < 0.9f)
@@ -51,7 +64,8 @@ public class FinishPortal : MonoBehaviour
         {
             isLoading = true;
             collision.gameObject.GetComponent<Player>().canMove = false; // Disable player movement
-            GoToNextLevel();
+
+            if(gameflow) gameflow.FinishLevel(); // Trigger event level finish, yang akan memanggil method GoToNextLevel() pada Gameflow
         }
     }
 }

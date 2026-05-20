@@ -292,8 +292,10 @@ public class Player : MonoBehaviour
             }
             if (tile != null)
             {
-                if(AudioManager.Instance == null) return;
-                AudioManager.Instance.PlayFootstep(tile.tileType);
+                if(AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayFootstep(tile.tileType);
+                }
                 Debug.Log(hit.collider.name);
             }
         }

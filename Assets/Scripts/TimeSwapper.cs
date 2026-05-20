@@ -13,8 +13,11 @@ public class TimeSwapper : MonoBehaviour
         // set timeline awal
         for (int i = 0; i < tileSliders.Count; i++)
         {
-            tileSliders[i].SetTimeline(i);
-            sliderPositions.Add(tileSliders[i].transform.position);
+            if(tileSliders[i])
+            {
+                tileSliders[i].SetTimeline(i);
+                sliderPositions.Add(tileSliders[i].transform.position);
+            }
         }
     }
 
@@ -23,9 +26,12 @@ public class TimeSwapper : MonoBehaviour
     {
         for (int i = 0; i < tileSliders.Count; i++)
         {
-            if(tileSliders[i].transform.position != sliderPositions[i])
+            if (tileSliders[i] != null && sliderPositions[i] != null)
             {
-                AnimateSlide(tileSliders[i], sliderPositions[i]);
+                if(tileSliders[i].transform.position != sliderPositions[i])
+                {
+                    AnimateSlide(tileSliders[i], sliderPositions[i]);
+                }
             }
         }
     }
