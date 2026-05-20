@@ -14,11 +14,26 @@ public class Gameflow : MonoBehaviour
     public FlowState currentState = FlowState.ArrangeRoute;
     [Tooltip("Index [0] untuk ArrangeRoute, Index [1] untuk PlayRoute")]
     public List<CinemachineCamera> cineCams;
-    
+
     [Tooltip("Index [0] untuk ArrangeRoute, Index [1] untuk PlayRoute")]
     public List<Button> flowButtons;
     public delegate void OnStateChange(FlowState newState);
     public event OnStateChange onStateChange;
+    public delegate void OnLevelFinish();
+    public event OnLevelFinish onLevelFinish;
+
+    void Start()
+    {
+        EndTransition();
+    }
+
+    void EndTransition()
+    {
+        Transition transition = FindAnyObjectByType<Transition>();
+        if (transition)        {
+            transition.EndTransition();
+        }
+    }
 
     public void PlayRoute()
     {
@@ -44,5 +59,10 @@ public class Gameflow : MonoBehaviour
 
         cineCams[0].Priority = 1;
         cineCams[1].Priority = 0;
+    }
+    
+    public void FinishLevel()
+    {
+        onLevelFinish?.Invoke();
     }
 }
