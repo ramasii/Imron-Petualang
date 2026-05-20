@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: ee00666ea09909e4296a5176ad4f632a
+guid: e0b44cd515c89c44d911be1ddc810754
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Batu Purba_Base_color
-    second: {fileID: 2800000, guid: 35afa556717e0024283c1d215937c71c, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
