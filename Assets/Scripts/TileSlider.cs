@@ -94,4 +94,10 @@ public class TileSlider : MonoBehaviour
     {
         return timeline;
     }
+
+    public Tile GetTile(int index)
+    {
+        if (index < 0 || index >= tiles.Count) return null;
+        return tiles[index];
+    }
 }

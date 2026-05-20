@@ -26,7 +26,7 @@ public class TimeSwapper : MonoBehaviour
     {
         for (int i = 0; i < tileSliders.Count; i++)
         {
-            if (tileSliders[i])
+            if (tileSliders[i] != null && sliderPositions[i] != null)
             {
                 if(tileSliders[i].transform.position != sliderPositions[i])
                 {
