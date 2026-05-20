@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
 
     private bool isAnimating = false;
     private Vector3 lastStayPos;
-    [SerializeField]private TileSlider parentSlider;
+    [SerializeField] private TileSlider parentSlider;
 
     public TileType tileType;
 
@@ -21,6 +21,15 @@ public class Tile : MonoBehaviour
     {
         Grass,
         Stone
+    }
+
+    void Awake()
+    {
+        Gameflow gameflow = FindAnyObjectByType<Gameflow>();
+        if (gameflow)
+        {
+            gameflow.onStateChange += OnFlowStateChanged;
+        }
     }
 
     void Start()
@@ -114,6 +123,21 @@ public class Tile : MonoBehaviour
         {
             Debug.Log($"Tile {gameObject.name} set phase {newTimeline} for {obj.gameObject.name}");
             obj.SetPhase(newTimeline);
+        }
+    }
+
+    public void OnFlowStateChanged(FlowState newFlowState)
+    {
+        if (newFlowState == FlowState.ArrangeRoute)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            if (parentSlider.GetTile(1) != this)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 
