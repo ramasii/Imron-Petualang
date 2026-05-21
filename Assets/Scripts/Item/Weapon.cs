@@ -20,7 +20,7 @@ public class Weapon : Item
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") && weaponHitTrigger.enabled)
         {
             // Debug.Log("Hit enemy with " + itemName);
             Enemy enemy = other.GetComponent<Enemy>();

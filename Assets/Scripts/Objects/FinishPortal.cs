@@ -4,12 +4,13 @@ using System.Collections;
 
 public class FinishPortal : MonoBehaviour
 {
-    public string nextSceneName;
+    private int nextSceneLoad;
     public Transition transition;
     private bool isLoading = false;
     private Gameflow gameflow;
     void Awake()
     {
+        nextSceneLoad = SceneManager.GetActiveScene().buildIndex + 1;
         gameflow = FindAnyObjectByType<Gameflow>();
         if (gameflow)
         {
@@ -18,17 +19,21 @@ public class FinishPortal : MonoBehaviour
     }
     public void GoToNextLevel()
     {
-        Debug.Log("Go to next level: " + nextSceneName);
+        // Debug.Log("Go to next level: " + nextSceneName);
 
         transition.StartTransition();
-        StartCoroutine(LoadAndHold(nextSceneName));
+        StartCoroutine(LoadAndHold(nextSceneLoad));
+        if (nextSceneLoad > PlayerPrefs.GetInt("levelAt"))
+        {
+            PlayerPrefs.SetInt("levelAt", nextSceneLoad);
+        }
     }
 
     // Coroutine untuk memuat scene secara asynchronous
     // mencegah freeze saat loading
-    IEnumerator LoadAsync(string sceneName)
+    IEnumerator LoadAsync(int sceneIndex)
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
 
         while (!operation.isDone)
         {
@@ -39,9 +44,9 @@ public class FinishPortal : MonoBehaviour
         }
     }
 
-    IEnumerator LoadAndHold(string sceneName)
+    IEnumerator LoadAndHold(int sceneIndex)
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneIndex);
 
         Instantiate(transition, Vector3.zero, Quaternion.identity); // Buat instance transisi
 

@@ -29,6 +29,7 @@ public class Tile : MonoBehaviour
         if (gameflow)
         {
             gameflow.onStateChange += OnFlowStateChanged;
+            OnFlowStateChanged(gameflow.currentState);
         }
     }
 

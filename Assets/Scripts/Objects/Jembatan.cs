@@ -32,6 +32,7 @@ public class Jembatan : TimableObject
             if (anim != null)
             {
                 anim.SetTrigger("Collapse");
+                AudioManager.Instance.PlaySFX(0); // Mainkan suara runtuh
             }
         }
     }
