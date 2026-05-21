@@ -116,10 +116,13 @@ public class Player : MonoBehaviour
             if (animator != null)
             {
                 // jika item yang digunakan adalah consumable
-                if (equippedItem is Consumable)
+                if (equippedItem is Consumable consumable)
                 {
-                    animator.SetTrigger("Use Item");
-                    DropItem();
+                    if(consumable.dropOnUse)
+                    {
+                        animator.SetTrigger("Use Item");
+                        DropItem();
+                    }
                 }
                 // jika item yang digunakan adalah weapon
                 else
