@@ -7,14 +7,21 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     public AudioClip[] footstepSFX;
+    public AudioClip[] SFX;
 
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    public void PlayFootstep(Tile.TileType type)
+    // public void PlayFootstep(Tile.TileType type)
+    // {
+    //     sfxSource.PlayOneShot(footstepSFX[(int)type]);
+    // }
+
+    public void PlaySFX(int index)
     {
-        sfxSource.PlayOneShot(footstepSFX[(int)type]);
+        sfxSource.PlayOneShot(SFX[index]);
     }
 }

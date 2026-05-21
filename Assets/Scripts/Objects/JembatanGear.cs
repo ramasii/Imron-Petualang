@@ -34,6 +34,7 @@ public class JembatanGear : MonoBehaviour
             Debug.Log("JembatanGear activated!");
             gearObject.SetActive(true);
             anim.SetTrigger("Activate");
+            AudioManager.Instance.PlaySFX(4); // Mainkan suara gear saat aktif
         }
     }
 

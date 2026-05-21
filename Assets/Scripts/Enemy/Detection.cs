@@ -6,7 +6,7 @@ public class Detection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && enemy.canChase)
         {
             enemy.playerTarget = other.transform;
             enemy.isChasing = true;
@@ -15,7 +15,7 @@ public class Detection : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && enemy.canChase)
         {
             enemy.playerTarget = other.transform;
             enemy.isChasing = true;

@@ -293,14 +293,14 @@ public class Player : MonoBehaviour
             {
                 tile = hit.collider.GetComponentInParent<Tile>();
             }
-            if (tile != null)
-            {
-                if(AudioManager.Instance != null)
-                {
-                    AudioManager.Instance.PlayFootstep(tile.tileType);
-                }
-                Debug.Log(hit.collider.name);
-            }
+            // if (tile != null)
+            // {
+            //     if(AudioManager.Instance != null)
+            //     {
+            //         AudioManager.Instance.PlayFootstep(tile.tileType);
+            //     }
+            //     Debug.Log(hit.collider.name);
+            // }
         }
     }
 

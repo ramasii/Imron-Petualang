@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     public float waitTime = 1f; //.
     public bool loop = true;
     [Header("Animator")]
-    public Animator animator;
+    // public Animator animator;
 
     private Vector3 spawnPos;
 
@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public bool isChasing = false;
+    public bool canChase = true;
 
     [HideInInspector]
     public Transform playerTarget;
@@ -39,12 +40,12 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (!canMove) return;
+        if (!canMove && !canChase) return;
 
         // ======================
         // CHASE PLAYER
         // ======================
-        if (isChasing && playerTarget != null)
+        if (canChase && isChasing && playerTarget != null)
         {
             RotateTo(playerTarget.position);
             moveDir = Vector3.MoveTowards(
@@ -78,36 +79,31 @@ public class Enemy : MonoBehaviour
             moveDir = Vector3.zero;
             StartCoroutine(WaitAtPoint());
         }
-
-        // =======================
-        // ANIMATOR
-        // =======================
-        MoveAnim();
     }
+    //     // =======================
+    //     // ANIMATOR
+    //     // =======================
+    //     MoveAnim();
+    // }
 
-    void MoveAnim()
-    {
-        if (animator != null)
-        {
-            animator.SetFloat("Magnitude", moveDir.magnitude);
-        }
-    }
+    // void MoveAnim()
+    // {
+    //     if (animator != null)
+    //     {
+    //         animator.SetFloat("Magnitude", moveDir.magnitude);
+    //     }
+    // }
 
     void RotateTo(Vector3 targetPos)
     {
         Vector3 direction = targetPos - transform.position;
-        direction.y = 0;
 
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
+        float angle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
 
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotateSpeed * Time.deltaTime
-            );
-        }
+        Vector3 rot = transform.eulerAngles;
+        rot.y = -angle + 90f;
+
+        transform.eulerAngles = rot;
     }
 
     void OnGameflowStateChange(FlowState newState)
@@ -182,11 +178,28 @@ public class Enemy : MonoBehaviour
 
             canMove = false;
             StartCoroutine(MoveU());
+            transform.position = spawnPos;
         }
         // kalo play route, musuh bisa jalan lagi
         else
         {
             canMove = true;
         }
+    }
+
+    public void StopChase(float duration)
+    {
+        StartCoroutine(StopChaseCoroutine(duration));
+    }
+
+    IEnumerator StopChaseCoroutine(float duration)
+    {
+        canChase = false;
+        isChasing = false;
+        playerTarget = null;
+
+        yield return new WaitForSeconds(duration);
+
+        canChase = true;
     }
 }

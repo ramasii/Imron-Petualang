@@ -97,6 +97,10 @@ public class Item : MonoBehaviour
             Player player = FindAnyObjectByType<Player>();
             player.equipWeapon = true;
         }
+        else if(itemName == "Obor")
+        {
+            AudioManager.Instance.PlaySFX(3); // Mainkan suara obor saat diambil
+        }
 
         ShowPickupBtn(false); // Sembunyikan tombol saat dipegang
     }
